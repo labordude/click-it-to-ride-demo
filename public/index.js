@@ -1,4 +1,4 @@
-addEventListener("DOMContentLoaded", () => {
+addEventListener('DOMContentLoaded', () => {
   /** ********DELIVERABLES START*****************/
   /** Project Pitch
    * HTML/CSS/JS
@@ -32,7 +32,7 @@ addEventListener("DOMContentLoaded", () => {
       condition,
       id,
       user_image_url,
-      image,
+      image
     ) {
       // console.log("car factory start");
       this.car_make = car_make;
@@ -179,7 +179,7 @@ addEventListener("DOMContentLoaded", () => {
         this.color,
         this.condition,
         this.user_image_url,
-        this.apiImage,
+        this.apiImage
       );
     }
 
@@ -192,19 +192,19 @@ addEventListener("DOMContentLoaded", () => {
    * ********VARIABLE DECLARATION START*********/
 
   // https://{cdn-instance}.imagin.studio/{api-name}?customer={customer-key}&{query parameters}
-  const imaginUrl = `https://cdn.imagin.studio/getImage?customer=${process.env.apikey}&`;
-  const carsUrl = "http://localhost:3000/cars";
-  const search = document.querySelector(".search-box");
-  const menu = document.querySelector(".navbar");
-  const header = document.querySelector("header");
+  const imaginUrl = `https://cdn.imagin.studio/getImage?customer=${config.apikey}&`;
+  const carsUrl = 'http://localhost:3000/cars';
+  const search = document.querySelector('.search-box');
+  const menu = document.querySelector('.navbar');
+  const header = document.querySelector('header');
   let currentCar;
   // let currentPage;
   // const carsPerPage = 9;
   const carLot = [];
   let isLoggedIn = false;
-  const carsContainer = document.querySelector("#cars-container");
-  const saleForm = document.querySelector("#sale-form");
-  const updaterForm = document.querySelector("#sale-form-updater");
+  const carsContainer = document.querySelector('#cars-container');
+  const saleForm = document.querySelector('#sale-form');
+  const updaterForm = document.querySelector('#sale-form-updater');
   /** ********VARIABLE DECLARATION END***********/
 
   /** ********FETCH REQUESTS START***************/
@@ -212,14 +212,14 @@ addEventListener("DOMContentLoaded", () => {
   const imagin = {
     image: function getJSON(url) {
       return fetch(url)
-        .then(response => {
+        .then((response) => {
           if (response.ok) {
             return response; // this API returns an image, it cannot be parsed into JSON
           } else {
             throw response.statusText;
           }
         })
-        .catch(error => console.log(error.message));
+        .catch((error) => console.log(error.message));
     },
   };
 
@@ -227,57 +227,57 @@ addEventListener("DOMContentLoaded", () => {
   const rover = {
     fetch: function getJSON(url) {
       return fetch(url)
-        .then(response => {
+        .then((response) => {
           if (response.ok) {
             return response.json();
           } else {
             throw response.statusText;
           }
         })
-        .catch(error => console.log(error.message));
+        .catch((error) => console.log(error.message));
     },
 
     post: function postJson(url, data) {
       return fetch(url, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-type": "application/json; charset=UTF-8",
+          'Content-type': 'application/json; charset=UTF-8',
         },
         body: JSON.stringify(data),
-      }).then(resp => resp.json());
+      }).then((resp) => resp.json());
     },
     patch: function patchJson(url, data) {
       return fetch(url, {
-        method: "PATCH",
+        method: 'PATCH',
         headers: {
-          "Content-type": "application/json; charset=UTF-8",
+          'Content-type': 'application/json; charset=UTF-8',
         },
         body: JSON.stringify(data),
-      }).then(resp => resp.json());
+      }).then((resp) => resp.json());
     },
     // DELETE URL
     sell: function deleteJSON(url) {
       return fetch(url, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       })
-        .then(response => {
+        .then((response) => {
           if (response.ok) {
             return response.json();
           } else {
             throw response.statusText;
           }
         })
-        .catch(error => console.log(error.message));
+        .catch((error) => console.log(error.message));
     },
   };
   /** ********FETCH REQUESTS END*****************/
   /** ********SALE FORM************************/
 
   // to add new listings to our car lot
-  saleForm.addEventListener("submit", e => {
+  saleForm.addEventListener('submit', (e) => {
     validateForm(e);
     e.preventDefault();
     const sellCar = {
@@ -294,20 +294,20 @@ addEventListener("DOMContentLoaded", () => {
     };
     function sendListing(sellCar) {
       fetch(carsUrl, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(sellCar),
       })
-        .then(response => {
+        .then((response) => {
           if (response.ok) {
             return response.json();
           } else {
             throw response.statusText;
           }
         })
-        .then(newCar => renderCarCards(newCar));
+        .then((newCar) => renderCarCards(newCar));
     }
     sendListing(sellCar);
     saleForm.reset();
@@ -315,60 +315,60 @@ addEventListener("DOMContentLoaded", () => {
 
   /** ********EVENT LISTENERS START**************/
   // search icon click
-  document.querySelector("#search-icon").addEventListener("click", () => {
-    search.classList.toggle("active");
-    menu.classList.remove("active");
+  document.querySelector('#search-icon').addEventListener('click', () => {
+    search.classList.toggle('active');
+    menu.classList.remove('active');
   });
 
   // check for changes in the <SELECT> filter elements
-  const yearSelector = document.querySelector("#year");
-  yearSelector.addEventListener("change", event => {
+  const yearSelector = document.querySelector('#year');
+  yearSelector.addEventListener('change', (event) => {
     filterList(event);
   });
-  const makeSelector = document.querySelector("#make");
-  makeSelector.addEventListener("change", event => {
+  const makeSelector = document.querySelector('#make');
+  makeSelector.addEventListener('change', (event) => {
     // redo model selector to match only models from selected make
     filterList(event);
   });
-  const modelSelector = document.querySelector("#model");
-  modelSelector.addEventListener("change", event => {
+  const modelSelector = document.querySelector('#model');
+  modelSelector.addEventListener('change', (event) => {
     filterList(event);
   });
   // menu icon click
-  document.querySelector("#menu-icon").addEventListener("click", () => {
-    menu.classList.toggle("active");
-    search.classList.remove("active");
+  document.querySelector('#menu-icon').addEventListener('click', () => {
+    menu.classList.toggle('active');
+    search.classList.remove('active');
   });
 
   // Hide Menu And Search Box On Scroll
-  window.addEventListener("scroll", () => {
-    menu.classList.remove("active");
-    search.classList.remove("active");
+  window.addEventListener('scroll', () => {
+    menu.classList.remove('active');
+    search.classList.remove('active');
   });
 
   // Header - ensure shadow stays away
-  window.addEventListener("scroll", () => {
-    header.classList.remove("shadow", window.scrollY > 0);
+  window.addEventListener('scroll', () => {
+    header.classList.remove('shadow', window.scrollY > 0);
   });
   // once header gets below the car, make the background white so you can see the text
-  document.addEventListener("scroll", () => {
+  document.addEventListener('scroll', () => {
     window.pageYOffset > 640
-      ? header.classList.add("bg-white")
-      : header.classList.remove("bg-white");
+      ? header.classList.add('bg-white')
+      : header.classList.remove('bg-white');
   });
 
   // look for the search form SUBMIT listener
-  search.addEventListener("submit", event => {
+  search.addEventListener('submit', (event) => {
     event.preventDefault();
-    window.location.href = "#cars";
+    window.location.href = '#cars';
     handleSearch(event);
   });
 
   // next page button CLICK listener
-  document.querySelector("#next-cars").addEventListener("click", event => {
+  document.querySelector('#next-cars').addEventListener('click', (event) => {
     rover
       .fetch(`${carsUrl}?_start=${currentCar.id}&_end=${currentCar.id + 9}`)
-      .then(cars => {
+      .then((cars) => {
         garbageCollector(carsContainer);
         const maxResults = cars.length >= 9 ? 9 : cars.length;
         for (let i = 0; i < maxResults; i++) {
@@ -379,11 +379,11 @@ addEventListener("DOMContentLoaded", () => {
   });
 
   // previous page button CLICK listener
-  document.querySelector("#prev-cars").addEventListener("click", event => {
+  document.querySelector('#prev-cars').addEventListener('click', (event) => {
     // this math keeps the button from attempting to access an array index less than 0
     const startAt = currentCar.id - 18 < 0 ? 0 : currentCar.id - 18;
     const endAt = startAt + 9;
-    rover.fetch(`${carsUrl}?_end=${endAt}&_start=${startAt}`).then(cars => {
+    rover.fetch(`${carsUrl}?_end=${endAt}&_start=${startAt}`).then((cars) => {
       garbageCollector(carsContainer);
       const maxResults = cars.length >= 9 ? 9 : cars.length;
       for (let i = 0; i < maxResults; i++) {
@@ -394,12 +394,12 @@ addEventListener("DOMContentLoaded", () => {
   });
 
   // update form SUBMIT listener
-  updaterForm.addEventListener("submit", (event, car) => {
+  updaterForm.addEventListener('submit', (event, car) => {
     validateForm(event);
     event.preventDefault();
     // rehides the form modal
-    document.querySelector("#modal_outer_frame").classList.add("hidden");
-    if (event.submitter.id === "cancel-btn") {
+    document.querySelector('#modal_outer_frame').classList.add('hidden');
+    if (event.submitter.id === 'cancel-btn') {
       // closes modal without fetch calls
       return false;
     } else {
@@ -409,31 +409,31 @@ addEventListener("DOMContentLoaded", () => {
 
   // image delete button
   const imageDeleteButton = document.querySelector(
-    "#sale-form-updater #image_delete_button",
+    '#sale-form-updater #image_delete_button'
   );
-  imageDeleteButton.addEventListener("click", event => {
-    document.querySelector("#sale-form-updater #image_url").value = "";
+  imageDeleteButton.addEventListener('click', (event) => {
+    document.querySelector('#sale-form-updater #image_url').value = '';
   });
 
   // clearFilters button
-  const clearFiltersButton = document.querySelector(".filters #clearFilters");
-  clearFiltersButton.addEventListener("click", () => {
-    document.querySelector("#year").value = "";
-    document.querySelector("#make").value = "";
-    document.querySelector("#model").value = "";
+  const clearFiltersButton = document.querySelector('.filters #clearFilters');
+  clearFiltersButton.addEventListener('click', () => {
+    document.querySelector('#year').value = '';
+    document.querySelector('#make').value = '';
+    document.querySelector('#model').value = '';
     // after clear go out and get a clean array of cars
-    rover.fetch(`${carsUrl}`).then(cars => initialize());
+    rover.fetch(`${carsUrl}`).then((cars) => initialize());
   });
 
   // login button
-  const loginButton = document.querySelector("#login-btn");
-  loginButton.addEventListener("click", () => {
+  const loginButton = document.querySelector('#login-btn');
+  loginButton.addEventListener('click', () => {
     // toggle the value
     isLoggedIn = !isLoggedIn;
     // adjust the button wording to know if user logged in/out
-    isLoggedIn ? (loginButton.value = "Logout") : (loginButton.value = "Login");
-    document.querySelectorAll(".admin-button-div").forEach(div => {
-      div.classList.toggle("hidden");
+    isLoggedIn ? (loginButton.value = 'Logout') : (loginButton.value = 'Login');
+    document.querySelectorAll('.admin-button-div').forEach((div) => {
+      div.classList.toggle('hidden');
     });
   });
   /** ********EVENT LISTENERS END****************/
@@ -445,56 +445,56 @@ addEventListener("DOMContentLoaded", () => {
     const form = event.target;
     const formFields = Array.from(form.elements);
 
-    formFields.forEach(field => {
+    formFields.forEach((field) => {
       if (field.checkValidity()) {
         // if invalid add red border class
-        field.classList.remove("invalid");
+        field.classList.remove('invalid');
       } else {
         // doesn't match the right pattern
         field.validity.patternMismatch
           ? (document.querySelector(
-              `#${field.id}-error`,
+              `#${field.id}-error`
             ).textContent += `Entry doesn't match required pattern`)
-          : "";
+          : '';
 
         // number too low for range
         field.validity.rangeUnderflow
           ? (document.querySelector(
-              `#${field.id}-error`,
+              `#${field.id}-error`
             ).textContent += `This number is below the acceptable range.`)
-          : "";
+          : '';
 
         // step mismatch
         field.validity.tooShort
           ? (document.querySelector(
-              `#${field.id}-error`,
+              `#${field.id}-error`
             ).textContent += `The entry is not long enough.`)
-          : "";
+          : '';
 
         // too long
         field.validity.tooLong
           ? (document.querySelector(
-              `#${field.id}-error`,
+              `#${field.id}-error`
             ).textContent += `Entry is too long`)
-          : "";
+          : '';
 
         // invalid type
         field.validity.typeMismatch
           ? (document.querySelector(
-              `#${field.id}-error`,
+              `#${field.id}-error`
             ).textContent += `Invalid type`)
-          : "";
+          : '';
         //   ? ""
 
         // missing value
         field.validity.valueMissing
           ? (document.querySelector(
-              `#${field.id}-error`,
+              `#${field.id}-error`
             ).textContent += `Field cannot be blank`)
-          : "";
+          : '';
         // display the error class with message
-        document.querySelector(`#${field.id}-error`).classList.remove("hidden");
-        field.classList.add("invalid");
+        document.querySelector(`#${field.id}-error`).classList.remove('hidden');
+        field.classList.add('invalid');
       }
     });
     //shut down the world if valid===false
@@ -508,7 +508,7 @@ addEventListener("DOMContentLoaded", () => {
   function handleSearch(event) {
     event.preventDefault();
     // take fuzzy search logic and go get cars
-    rover.fetch(`${carsUrl}?q=${event.target.search.value}`).then(cars => {
+    rover.fetch(`${carsUrl}?q=${event.target.search.value}`).then((cars) => {
       garbageCollector(carsContainer);
       for (let i = 0; i < 9; i++) {
         currentCar = cars[i];
@@ -519,31 +519,31 @@ addEventListener("DOMContentLoaded", () => {
 
   function filterList(event) {
     // see if year is already chosen
-    const yearSelected = document.querySelector("#year").value;
+    const yearSelected = document.querySelector('#year').value;
     const yearFilter =
-      document.querySelector("#year").value &&
-      document.querySelector("#year").value !== ""
-        ? `&car_model_year=${document.querySelector("#year").value}`
-        : "";
+      document.querySelector('#year').value &&
+      document.querySelector('#year').value !== ''
+        ? `&car_model_year=${document.querySelector('#year').value}`
+        : '';
     // see if make is already chosen
-    const makeSelected = document.querySelector("#make").value;
+    const makeSelected = document.querySelector('#make').value;
     const makeFilter =
-      document.querySelector("#make").value &&
-      document.querySelector("#make").value !== ""
-        ? `&car_make=${document.querySelector("#make").value}`
-        : "";
+      document.querySelector('#make').value &&
+      document.querySelector('#make').value !== ''
+        ? `&car_make=${document.querySelector('#make').value}`
+        : '';
     // see if model is already chosen
-    const modelSelected = document.querySelector("#model").value;
+    const modelSelected = document.querySelector('#model').value;
     const modelFilter =
-      document.querySelector("#model").value &&
-      document.querySelector("#model").value !== ""
-        ? `&car_model=${document.querySelector("#model").value}`
-        : "";
+      document.querySelector('#model').value &&
+      document.querySelector('#model').value !== ''
+        ? `&car_model=${document.querySelector('#model').value}`
+        : '';
     // build out URL params string with non-empty values
     const params = `${yearFilter}${makeFilter}${modelFilter}`;
 
     // grab the filtered cars array and render the first 9
-    rover.fetch(`${carsUrl}?${params}`).then(cars => {
+    rover.fetch(`${carsUrl}?${params}`).then((cars) => {
       // let filterArray = cars.filter(car => (car.car_make = event.target.value));
 
       // run garbageCollector on modelOptions array
@@ -568,12 +568,12 @@ addEventListener("DOMContentLoaded", () => {
     // there is no significance to fox socks except my daughter is obsessed with foxes
     // load current price into edit form
     updaterForm.price.value = document.querySelector(
-      `.card[data-id="${car.id}"] .price`,
+      `.card[data-id="${car.id}"] .price`
     ).textContent;
     // year
     updaterForm
       .querySelector(`[value="${car.car_model_year}"]`)
-      .setAttribute("selected", "selected");
+      .setAttribute('selected', 'selected');
     // make
     updaterForm.make.value = car.car_make;
 
@@ -582,42 +582,42 @@ addEventListener("DOMContentLoaded", () => {
 
     // color
     updaterForm.color.value = document.querySelector(
-      `.card[data-id="${car.id}"]> .color >.fox-socks`,
+      `.card[data-id="${car.id}"]> .color >.fox-socks`
     ).textContent;
     // condition
     updaterForm
       .querySelector(`[value="${car.condition}"]`)
-      .setAttribute("selected", "selected");
+      .setAttribute('selected', 'selected');
 
     // mileage
     updaterForm.mileage.value = document.querySelector(
-      `.card[data-id="${car.id}"]> .mileage >.fox-socks`,
+      `.card[data-id="${car.id}"]> .mileage >.fox-socks`
     ).textContent;
 
     // transmission
     const currentTransmission = document.querySelector(
-      `.card[data-id="${car.id}"]> .transmission >.fox-socks`,
+      `.card[data-id="${car.id}"]> .transmission >.fox-socks`
     ).textContent;
     updaterForm
       .querySelector(`[value="${currentTransmission}"]`)
-      .setAttribute("selected", "selected");
+      .setAttribute('selected', 'selected');
 
     // fuel-type
     const currentFuel = document.querySelector(
-      `.card[data-id="${car.id}"]> .fuel-type >.fox-socks`,
+      `.card[data-id="${car.id}"]> .fuel-type >.fox-socks`
     ).textContent;
     updaterForm
       .querySelector(`[value="${currentFuel}"]`)
-      .setAttribute("selected", "selected");
+      .setAttribute('selected', 'selected');
 
     // imageUrl
     updaterForm.user_image_url.value = document.querySelector(
-      `.card[data-id="${car.id}"] .car-image`,
+      `.card[data-id="${car.id}"] .car-image`
     ).src;
 
     currentCar = car;
     // unhide the form modal window
-    document.querySelector("#modal_outer_frame").classList.remove("hidden");
+    document.querySelector('#modal_outer_frame').classList.remove('hidden');
   }
 
   // delete functionality
@@ -625,7 +625,7 @@ addEventListener("DOMContentLoaded", () => {
     // WRITE THE DELETE FUNCTION HERE - DONE!
     const card = document.querySelector(`.card[data-id="${car.id}"]`);
 
-    rover.sell(`${carsUrl}/${car.id}`).then(car => {
+    rover.sell(`${carsUrl}/${car.id}`).then((car) => {
       card.remove();
     });
   }
@@ -650,14 +650,14 @@ addEventListener("DOMContentLoaded", () => {
       user_image_url: event.target.user_image_url.value,
     };
 
-    card.querySelector("#edit-button").textContent = "Edit";
+    card.querySelector('#edit-button').textContent = 'Edit';
     // WRITE PATCH FUNCTION HERE:
     rover
       .patch(`${carsUrl}/${currentCar.id}`, data)
-      .then(car => {
+      .then((car) => {
         updateCard(car); // make sure we update the card after db accepts it
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }
@@ -675,39 +675,39 @@ addEventListener("DOMContentLoaded", () => {
   function updateCard(car) {
     // price lives in an h2 with class fox-socks
     document.querySelector(
-      `.card[data-id="${car.id}"] h2.fox-socks`,
+      `.card[data-id="${car.id}"] h2.fox-socks`
     ).textContent = parseFloat(car.price).toFixed(2);
     // year make model live ni the car-title
     document.querySelector(
-      `.card[data-id="${car.id}"] .car-title`,
+      `.card[data-id="${car.id}"] .car-title`
     ).textContent = `${car.car_model_year} ${car.car_make} ${car.car_model} `;
     // condition
     document.querySelector(
-      `.card[data-id="${car.id}"] >.condition > h4`,
+      `.card[data-id="${car.id}"] >.condition > h4`
     ).textContent = car.condition;
     // mileage
     document.querySelector(
-      `.card[data-id="${car.id}"] .mileage > h4`,
+      `.card[data-id="${car.id}"] .mileage > h4`
     ).textContent = car.mileage;
     // transmission
     document.querySelector(
-      `.card[data-id="${car.id}"] .transmission > h4`,
+      `.card[data-id="${car.id}"] .transmission > h4`
     ).textContent = car.transmission;
     // fuel type
     document.querySelector(
-      `.card[data-id="${car.id}"] .fuel-type > h4`,
+      `.card[data-id="${car.id}"] .fuel-type > h4`
     ).textContent = car.fuel_type;
     document.querySelector(
-      `.card[data-id="${car.id}"] .color> h4`,
+      `.card[data-id="${car.id}"] .color> h4`
     ).textContent = car.color;
 
     document.querySelector(
-      `.card[data-id="${car.id}"] .car-image`,
+      `.card[data-id="${car.id}"] .car-image`
     ).alt = `${car.car_model_year} ${car.car_make} ${car.car_model}`;
 
     // use imagin API to generate image for the car based on parameters
     // if there is a user uploaded image, use that
-    if (car.user_image_url && car.user_image_url !== "") {
+    if (car.user_image_url && car.user_image_url !== '') {
       document.querySelector(`.card[data-id="${car.id}"] .car-image`).src =
         car.user_image_url;
     } else if (car.image) {
@@ -717,14 +717,14 @@ addEventListener("DOMContentLoaded", () => {
     } else {
       //go out and get one and store in db for faster next render
       getImage(car.car_model_year, car.car_make, car.car_model, car.color).then(
-        image => {
+        (image) => {
           document.querySelector(`.card[data-id="${car.id}"] .car-image`).src =
             image.url;
-          let data = {image: image.url};
+          let data = { image: image.url };
           rover
             .patch(`${carsUrl}/${car.id}`, data)
-            .then(updated => console.log(updated));
-        },
+            .then((updated) => console.log(updated));
+        }
       );
     }
     currentCar = car;
@@ -734,134 +734,134 @@ addEventListener("DOMContentLoaded", () => {
   function renderCarCards(car) {
     // create elements
     // <!-- Card -->
-    const carCard = document.createElement("div");
-    carCard.classList.add("card");
-    carCard.setAttribute("data-id", car.id);
+    const carCard = document.createElement('div');
+    carCard.classList.add('card');
+    carCard.setAttribute('data-id', car.id);
     //  <!-- image-->
-    const carImage = document.createElement("img");
+    const carImage = document.createElement('img');
     carImage.alt = `${car.car_model_year} ${car.car_make} ${car.car_model}`;
-    carImage.classList.add("car-image");
+    carImage.classList.add('car-image');
 
     // use imagin API to generate image for the car based on parameters
-    if (car.user_image_url && car.user_image_url !== "") {
+    if (car.user_image_url && car.user_image_url !== '') {
       carImage.src = car.user_image_url;
     } else if (car.image) {
       carImage.src = car.image;
     } else {
       getImage(car.car_model_year, car.car_make, car.car_model, car.color).then(
-        image => {
+        (image) => {
           carImage.src = image.url;
-          let data = {image: image.url};
+          let data = { image: image.url };
           rover
             .patch(`${carsUrl}/${car.id}`, data)
-            .then(updated => console.log("success!"));
-        },
+            .then((updated) => console.log('success!'));
+        }
       );
     }
 
     //  <!-- price container
-    const carPriceDiv = document.createElement("div");
-    carPriceDiv.classList.add("price-div");
-    const dollarSignIcon = document.createElement("i");
-    dollarSignIcon.classList.add("fa-solid", "fa-dollar-sign", "dollar-sign");
-    const carPrice = document.createElement("h2");
-    carPrice.classList.add("cars-text", "price", "fox-socks");
+    const carPriceDiv = document.createElement('div');
+    carPriceDiv.classList.add('price-div');
+    const dollarSignIcon = document.createElement('i');
+    dollarSignIcon.classList.add('fa-solid', 'fa-dollar-sign', 'dollar-sign');
+    const carPrice = document.createElement('h2');
+    carPrice.classList.add('cars-text', 'price', 'fox-socks');
     carPrice.textContent = `${parseFloat(car.price).toFixed(2)}`;
     carPriceDiv.append(dollarSignIcon, carPrice);
 
     // <!-- DETAILS SECTION
     // year | make | model
-    const carYearMakeModelDiv = document.createElement("div");
-    const carYearMakeModelText = document.createElement("h2");
-    carYearMakeModelDiv.classList.add("car-title-div");
-    carYearMakeModelText.classList.add("car-title", "fox-socks");
+    const carYearMakeModelDiv = document.createElement('div');
+    const carYearMakeModelText = document.createElement('h2');
+    carYearMakeModelDiv.classList.add('car-title-div');
+    carYearMakeModelText.classList.add('car-title', 'fox-socks');
     carYearMakeModelText.textContent = `${car.car_model_year} ${car.car_make} ${car.car_model} `;
     carYearMakeModelDiv.append(carYearMakeModelText);
 
     //       <!-- condition -->
-    const carConditionDiv = document.createElement("div");
-    const carConditionText = document.createElement("h3");
-    const carConditionResult = document.createElement("h4");
-    carConditionDiv.classList.add("sub-details", "condition");
-    carConditionText.textContent = "Condition:";
-    carConditionResult.classList.add("fox-socks");
+    const carConditionDiv = document.createElement('div');
+    const carConditionText = document.createElement('h3');
+    const carConditionResult = document.createElement('h4');
+    carConditionDiv.classList.add('sub-details', 'condition');
+    carConditionText.textContent = 'Condition:';
+    carConditionResult.classList.add('fox-socks');
     carConditionResult.textContent = car.condition;
     carConditionDiv.append(carConditionText, carConditionResult);
 
     //       <!-- mileage-->
-    const carMileageDiv = document.createElement("div");
-    const carMileageText = document.createElement("h3");
-    const carMileageResult = document.createElement("h4");
-    carMileageDiv.classList.add("sub-details", "mileage");
-    carMileageResult.classList.add("fox-socks");
-    carMileageText.textContent = "Mileage:";
+    const carMileageDiv = document.createElement('div');
+    const carMileageText = document.createElement('h3');
+    const carMileageResult = document.createElement('h4');
+    carMileageDiv.classList.add('sub-details', 'mileage');
+    carMileageResult.classList.add('fox-socks');
+    carMileageText.textContent = 'Mileage:';
     carMileageResult.textContent = car.mileage;
     carMileageDiv.append(carMileageText, carMileageResult);
 
     //       <!-- transmission -->
-    const carTransmissionDiv = document.createElement("div");
-    const carTransmissionText = document.createElement("h3");
-    const carTransmissionResult = document.createElement("h4");
-    carTransmissionDiv.classList.add("sub-details", "transmission");
-    carTransmissionResult.classList.add("fox-socks");
-    carTransmissionText.textContent = "Transmission:";
+    const carTransmissionDiv = document.createElement('div');
+    const carTransmissionText = document.createElement('h3');
+    const carTransmissionResult = document.createElement('h4');
+    carTransmissionDiv.classList.add('sub-details', 'transmission');
+    carTransmissionResult.classList.add('fox-socks');
+    carTransmissionText.textContent = 'Transmission:';
     carTransmissionResult.textContent = car.transmission;
     carTransmissionDiv.append(carTransmissionText, carTransmissionResult);
 
     //       <!-- color-->
-    const carColorDiv = document.createElement("div");
-    const carColorText = document.createElement("h3");
-    const carColorResult = document.createElement("h4");
-    carColorDiv.classList.add("sub-details", "color");
-    carColorResult.classList.add("fox-socks");
-    carColorText.textContent = "Color:";
+    const carColorDiv = document.createElement('div');
+    const carColorText = document.createElement('h3');
+    const carColorResult = document.createElement('h4');
+    carColorDiv.classList.add('sub-details', 'color');
+    carColorResult.classList.add('fox-socks');
+    carColorText.textContent = 'Color:';
     carColorResult.textContent = car.color;
     carColorDiv.append(carColorText, carColorResult);
 
     //      <!-- fuel type-->
-    const carFuelTypeDiv = document.createElement("div");
-    const carFuelTypeText = document.createElement("h3");
-    const carFuelTypeResult = document.createElement("h4");
-    carFuelTypeDiv.classList.add("sub-details", "fuel-type");
-    carFuelTypeText.textContent = "Fuel Type:";
-    carFuelTypeResult.classList.add("fox-socks");
+    const carFuelTypeDiv = document.createElement('div');
+    const carFuelTypeText = document.createElement('h3');
+    const carFuelTypeResult = document.createElement('h4');
+    carFuelTypeDiv.classList.add('sub-details', 'fuel-type');
+    carFuelTypeText.textContent = 'Fuel Type:';
+    carFuelTypeResult.classList.add('fox-socks');
     carFuelTypeResult.textContent = car.fuel_type;
     carFuelTypeDiv.append(carFuelTypeText, carFuelTypeResult);
 
     //       <!-- contact us button -->
-    const carContactUsDiv = document.createElement("div");
-    const carContactUsLink = document.createElement("a");
-    const carContactUsButton = document.createElement("input");
-    carContactUsLink.href = "#footer";
-    carContactUsButton.classList.add("contact-us-button");
-    carContactUsButton.value = "Contact us today!";
+    const carContactUsDiv = document.createElement('div');
+    const carContactUsLink = document.createElement('a');
+    const carContactUsButton = document.createElement('input');
+    carContactUsLink.href = '#footer';
+    carContactUsButton.classList.add('contact-us-button');
+    carContactUsButton.value = 'Contact us today!';
     carContactUsLink.append(carContactUsButton);
     carContactUsDiv.append(carContactUsLink);
 
     //       <!-- edit/delete buttons -->
     // create
-    const carAdminDiv = document.createElement("div");
-    const carEditButton = document.createElement("button");
-    const carDeleteButton = document.createElement("button");
+    const carAdminDiv = document.createElement('div');
+    const carEditButton = document.createElement('button');
+    const carDeleteButton = document.createElement('button');
     // populate
-    carAdminDiv.classList.add("admin-button-div", "flex");
-    carEditButton.id = "edit-button";
-    carDeleteButton.id = "delete-button";
-    carEditButton.classList.add("admin-btn");
-    carDeleteButton.classList.add("admin-btn");
-    carEditButton.textContent = "Edit";
-    carDeleteButton.textContent = "Delete listing";
+    carAdminDiv.classList.add('admin-button-div', 'flex');
+    carEditButton.id = 'edit-button';
+    carDeleteButton.id = 'delete-button';
+    carEditButton.classList.add('admin-btn');
+    carDeleteButton.classList.add('admin-btn');
+    carEditButton.textContent = 'Edit';
+    carDeleteButton.textContent = 'Delete listing';
     // tracking and event listeners
     currentCar = car;
-    carDeleteButton.addEventListener("click", () => handleDelete(car));
-    carEditButton.addEventListener("click", () => {
-      carEditButton.textContent === "Edit"
+    carDeleteButton.addEventListener('click', () => handleDelete(car));
+    carEditButton.addEventListener('click', () => {
+      carEditButton.textContent === 'Edit'
         ? handleEdit(carCard, car)
         : handleSave(currentCar, car);
     });
     isLoggedIn // true -currently false
-      ? carAdminDiv.classList.remove("hidden")
-      : carAdminDiv.classList.add("hidden");
+      ? carAdminDiv.classList.remove('hidden')
+      : carAdminDiv.classList.add('hidden');
     // append
     carAdminDiv.append(carEditButton, carDeleteButton);
     // append to DOM
@@ -876,7 +876,7 @@ addEventListener("DOMContentLoaded", () => {
       carFuelTypeDiv,
       carColorDiv,
       carContactUsDiv,
-      carAdminDiv,
+      carAdminDiv
     );
 
     carsContainer.appendChild(carCard);
@@ -888,49 +888,49 @@ addEventListener("DOMContentLoaded", () => {
 
   // years filter from array of car_model_years
   function buildYearFilter(cars, filter) {
-    const yearsFilter = document.querySelector("#year");
+    const yearsFilter = document.querySelector('#year');
     // clean up existing options so new ones aren't appending to the end
     garbageCollector(yearsFilter);
     // use Set to get unique values
-    const uniqueYears = [...new Set(cars.map(car => car.car_model_year))];
+    const uniqueYears = [...new Set(cars.map((car) => car.car_model_year))];
     // sort descending order
     uniqueYears.sort((a, b) => b - a);
     //ensure top option is populated empty
-    const emptyOption = document.createElement("option");
+    const emptyOption = document.createElement('option');
     yearsFilter.append(emptyOption);
-    uniqueYears.forEach(year => {
-      const yearOption = document.createElement("option");
+    uniqueYears.forEach((year) => {
+      const yearOption = document.createElement('option');
       yearOption.value = year;
       yearOption.textContent = year;
       //check to see if this option is equal to any arguments to set it as selected
       if (
-        (filter !== "" && yearOption.textContent === filter) ||
+        (filter !== '' && yearOption.textContent === filter) ||
         uniqueYears.length === 1
       ) {
-        yearOption.setAttribute("selected", "selected");
+        yearOption.setAttribute('selected', 'selected');
       }
       yearsFilter.append(yearOption);
     });
   }
   // build filter from array of car_make
   function buildMakeFilter(cars, filter) {
-    const makeFilter = document.querySelector("#make");
+    const makeFilter = document.querySelector('#make');
     garbageCollector(makeFilter);
-    const uniqueMakes = [...new Set(cars.map(car => car.car_make))];
+    const uniqueMakes = [...new Set(cars.map((car) => car.car_make))];
     uniqueMakes.sort();
 
-    const emptyOption = document.createElement("option");
+    const emptyOption = document.createElement('option');
     makeFilter.append(emptyOption);
-    uniqueMakes.forEach(make => {
-      const makeOption = document.createElement("option");
+    uniqueMakes.forEach((make) => {
+      const makeOption = document.createElement('option');
       makeOption.value = make;
       makeOption.textContent = make;
 
       if (
-        (filter !== "" && makeOption.textContent === filter) ||
+        (filter !== '' && makeOption.textContent === filter) ||
         uniqueMakes.length === 1
       ) {
-        makeOption.setAttribute("selected", "selected");
+        makeOption.setAttribute('selected', 'selected');
       }
       makeFilter.append(makeOption);
     });
@@ -938,21 +938,21 @@ addEventListener("DOMContentLoaded", () => {
 
   // build filter from array of car_model
   function buildModelFilter(cars, filter) {
-    const modelFilter = document.querySelector("#model");
+    const modelFilter = document.querySelector('#model');
     garbageCollector(modelFilter);
-    const uniqueModels = [...new Set(cars.map(car => car.car_model))];
+    const uniqueModels = [...new Set(cars.map((car) => car.car_model))];
     uniqueModels.sort();
-    const emptyOption = document.createElement("option");
+    const emptyOption = document.createElement('option');
     modelFilter.append(emptyOption);
-    uniqueModels.forEach(model => {
-      const modelOption = document.createElement("option");
+    uniqueModels.forEach((model) => {
+      const modelOption = document.createElement('option');
       modelOption.value = model;
       modelOption.textContent = model;
       if (
-        (filter !== "" && modelOption.textContent === filter) ||
+        (filter !== '' && modelOption.textContent === filter) ||
         uniqueModels.length === 1
       ) {
-        modelOption.setAttribute("selected", "selected");
+        modelOption.setAttribute('selected', 'selected');
       }
       modelFilter.append(modelOption);
     });
@@ -970,12 +970,12 @@ addEventListener("DOMContentLoaded", () => {
 
   // start the car sales party
   function initialize() {
-    rover.fetch(`${carsUrl}`).then(cars => {
+    rover.fetch(`${carsUrl}`).then((cars) => {
       garbageCollector(carsContainer);
 
       const maxResults = cars.length >= 9 ? 9 : cars.length;
       for (let i = 0; i < maxResults; i++) {
-        window["myCar" + i] = new Car(
+        window['myCar' + i] = new Car(
           cars[i].car_make,
           cars[i].car_model,
           cars[i].car_model_year,
@@ -987,15 +987,15 @@ addEventListener("DOMContentLoaded", () => {
           cars[i].condition,
           cars[i].id,
           cars[i].user_image_url,
-          cars[i].image,
+          cars[i].image
         );
-        carLot.push(window["myCar" + i]);
+        carLot.push(window['myCar' + i]);
         renderCarCards(cars[i]);
       }
       // start off fresh with all options available in the db
-      buildYearFilter(cars, "");
-      buildMakeFilter(cars, "");
-      buildModelFilter(cars, "");
+      buildYearFilter(cars, '');
+      buildMakeFilter(cars, '');
+      buildModelFilter(cars, '');
     });
   }
   // start your engines!
